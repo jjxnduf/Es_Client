@@ -1,50 +1,55 @@
 package com.example;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        Scanner myObj = new Scanner(System.in);
+    public static void main(String[] args) throws java.io.IOException {
+        Scanner scanner = new Scanner(System.in);
 
-        
-            System.out.println("Inserire IP Server:");
-            String ip = myObj.nextLine();
+        System.out.print("Inserisci l'IP del server: ");
+        String ip = scanner.nextLine();
 
-            System.out.println("Inserire porta del server:");
-            int porta = myObj.nextInt();
-            myObj.nextLine();
+        System.out.print("Inserisci la porta del server: ");
+        int port = scanner.nextInt();
+        scanner.nextLine();
 
-            Socket mioSocket = new Socket(ip, porta);
-            BufferedReader in = new BufferedReader(new InputStreamReader(mioSocket.getInputStream()));
-            PrintWriter out = new PrintWriter(mioSocket.getOutputStream(), true);
+        Socket socket = new Socket(ip, port);
+        PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-            System.out.println("Connesso al server; premere EXIT per uscire");
+        System.out.println("Connesso al server. Inserisci numeri e operazione (1=+, 2=-, 3=/, 4=*). Qualsiasi altro valore per uscire.");
 
-            while (true) {
-                System.out.print("Inserire il messaggio: ");
-                String messageToSend = myObj.nextLine();
+        while (true) {
+            System.out.print("Primo numero: ");
+            int num1 = scanner.nextInt();
 
-                if (messageToSend.equalsIgnoreCase("EXIT")) {
-                    out.println("!"); 
-                    break;
-                } else {
-                    out.println(messageToSend);
-                }
+            System.out.print("Secondo numero: ");
+            int num2 = scanner.nextInt();
 
-                String serverResponse = in.readLine();
-                System.out.println("Risposta server: " + serverResponse);
+            System.out.print("Operazione (1=+, 2=-, 3=/, 4=*): ");
+            int op = scanner.nextInt();
+
+            if (op < 1 || op > 4) {
+                out.println(num1 + " " + num2 + " " + op);
+                break;
             }
 
-            in.close();
-            out.close();
-            mioSocket.close();
-            myObj.close();
-            System.out.println("Connessione terminata");
+            String message = num1 + " " + num2 + " " + op;
+            out.println(message);
+
+            String risposta = in.readLine();
+            System.out.println("Risposta dal server: " + risposta);
+        }
+
+        out.close();
+        in.close();
+        socket.close();
+        scanner.close();
+
+        System.out.println("Connessione chiusa.");
     }
 }
-
