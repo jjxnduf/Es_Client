@@ -21,7 +21,13 @@ public class Main {
         PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-        System.out.println("Connesso al server. Inserisci numeri e operazione (1=+, 2=-, 3=/, 4=*). Qualsiasi altro valore per uscire.");
+        
+        String serverVersion = in.readLine();
+        System.out.println("Versione del server: " + serverVersion);
+
+
+        System.out.println(
+                "Connesso al server. Inserisci numeri e operazione (1=+, 2=-, 3=/, 4=*). Qualsiasi altro valore per uscire.");
 
         while (true) {
             System.out.print("Primo numero: ");
@@ -34,12 +40,12 @@ public class Main {
             int op = scanner.nextInt();
 
             if (op < 1 || op > 4) {
-                out.println(num1 + " " + num2 + " " + op);
                 break;
             }
 
-            String message = num1 + " " + num2 + " " + op;
-            out.println(message);
+            out.println(num1);
+            out.println(num2);
+            out.println(op);
 
             String risposta = in.readLine();
             System.out.println("Risposta dal server: " + risposta);
